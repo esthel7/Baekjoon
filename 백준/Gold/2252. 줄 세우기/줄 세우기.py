@@ -18,7 +18,7 @@ for i in range(M):
 q=[]
 for i in range(1,N+1):
     if degree[i]==0:
-        q.append(i)
+        q.append(i) # 그냥 for문으로 돌리면 시간초과남
 
 while len(q)>0:
     first=q.pop(0)
@@ -28,20 +28,4 @@ while len(q)>0:
         degree[back]=degree[back]-1
         if degree[back]==0:
             q.append(back)
-
-# flag=0
-# while flag<N:
-#     for i in range(1,N+1):
-#         if degree[i]==0: # 맨 앞에 위치
-#             print(i,end=' ')
-#             flag=flag+1
-#             degree[i]=-1
-#             for j in range(len(graph[i])): # 해당 번호 뒤에 오는 번호의 degree 감소시켜주기
-#                 back=graph[i][j]
-#                 degree[back]=degree[back]-1
-#                 if degree[back]==0:
-#                     print(back,end=' ')
-#                     flag=flag+1
-#                     degree[back]=-1
-
-
+            
