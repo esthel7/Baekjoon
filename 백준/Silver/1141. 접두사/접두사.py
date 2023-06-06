@@ -1,24 +1,28 @@
 import sys
 input=sys.stdin.readline
 
+def find(lL):
+    s.append(l[0])
+    for i in range(1,lL):
+        flag=0
+        I=len(l[i])
+        for j in range(len(s)):
+            if s[j][:I]==l[i]:
+                flag=1
+                break
+        if flag==0:
+            s.append(l[i])
+    print(len(s))
+
 N=int(input())
 l=[]
 for i in range(N):
     l.append(input().rstrip())
-l=list(set(l))
-l.sort(key=len)
-N=len(l)
-# print(l)
 
-# 한 단어라도 어느 단어 앞에 포함되면 안됨
-count=0
-for i in range(N):
-    I=len(l[i])
-    flag=0
-    for j in range(i+1,N):
-        if l[j][:I] == l[i]:
-            flag=1
-            break
-    if flag==0:
-        count+=1
-print(count)
+l=list(set(l)) # 중복제거
+lL=len(l)
+for i in range(lL):
+    l[i]=list(l[i])
+l=sorted(l,key=len,reverse=True) # 가장 긴 단어부터 오도록
+s=[]
+find(lL)
