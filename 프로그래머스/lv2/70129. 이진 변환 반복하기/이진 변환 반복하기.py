@@ -1,56 +1,36 @@
-def solution(s):
-    
-    def remove(n):
-        c=list(n)
-        num=0 # 0 개수
-        u=0
-        for i in range(len(c)):
-            if c[i]=='0':
-                num+=1
-            else:
-                u=u*10+1
-        return (num,str(u))
-        
-        
-    def change(n):
-        cnt=0
-        now=1
-        l=[]
-        while n!=0:
-            if n==now:
-                if len(l)==0:
-                    l=[0 for i in range(cnt+1)]
-                l[cnt]=1
-                n=0
-            elif n<now:
-                if len(l)==0:
-                    l=[0 for i in range(cnt)]
-                l[cnt-1]=1
-                n-=now/2
-                now=1
-                cnt=0
-            else:
-                now*=2
-                cnt+=1
-        
-        r=''
-        for i in range(len(l)):
-            r=str(l[i])+r
-        return str(r)
-        
-    answer = []
-    num=0 # 0 개수
-    cnt=0 # 변환횟수
-    
-    while True:
-        newNum,s=remove(s) # 0 제거
-        num+=newNum
+def change(s): # 자릿수
+    num=1
+    cnt=0
+    l=[]
+    while s!=0:
+        if num>s:
+            if len(l)==0:
+                l=['0' for i in range(cnt)]
+            s=s-num//2
+            l[cnt-1]='1'
+            cnt=0
+            num=1
+            continue
+        num*=2
         cnt+=1
-        if s=='1':
-            answer.append(cnt)
-            answer.append(num)
-            break
-        n=len(s)
-        s=change(n) # 2진법
+    return list(reversed(l))
 
-    return answer
+def run(s): # 0 remove
+    remove=0
+    for i in range(len(s)):
+        if s[i]=='0':
+            remove+=1
+    return [len(s)-remove,remove]
+
+def solution(s):
+    num=0
+    remove=0
+    while s!='1':
+        value=run(s)
+        num+=1
+        remove+=value[1]
+        newS=value[0]
+        newS=change(newS)
+        s=''.join(newS)
+    
+    return [num,remove]
