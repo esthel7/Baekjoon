@@ -1,38 +1,37 @@
-def solution(arr):
-    def check4(i,j,num,c0,c1):
-        if arr[i][j]!=-1 and arr[i][j]==arr[i][j+num//2]==arr[i+num//2][j]==arr[i+num//2][j+num//2]:
-            arr[i][j+num//2]=-1
-            arr[i+num//2][j]=-1
-            arr[i+num//2][j+num//2]=-1
-            return arr[i][j],c0,c1
-        if arr[i][j]==0:
-            c0+=1
-        elif arr[i][j]==1:
-            c1+=1
-        return -1,c0,c1
+def run(arr,num,z,o):
+    if num>len(arr):
+        return [z,o]
     
-    def find(n,num,c0,c1):
-        for i in range(0,n,num):
-            for j in range(0,n,num):
-                arr[i][j],c0,c1=check4(i,j,num,c0,c1)
-        return c0,c1
+    for i in range(0,len(arr),num):
+        for j in range(0,len(arr),num):
+            value=arr[i][j]
+            if value==-1:
+                continue
+            
+            if arr[i][j+num//2]==value and arr[i+num//2][j]==value and arr[i+num//2][j+num//2]==value:
+                if value==0:
+                    z-=3
+                else:
+                    o-=3
+            else:
+                arr[i][j]=-1  
+    return run(arr,num*2,z,o)
 
+
+def solution(arr):
+    z=0
+    o=0
+    if len(arr)==1:
+        if arr[0][0]==0:
+            return [1,0]
+        return [0,1]
     
-    answer = []
-    n=len(arr)
-    num=2
-    c0=0
-    c1=0
-    while num<=n:
-        c0,c1=find(n,num,c0,c1)
-        num*=2
-    
-    for i in range(n):
-        for j in range(n):
+    for i in range(len(arr)):
+        for j in range(len(arr)):
             if arr[i][j]==0:
-                c0+=1
-            elif arr[i][j]==1:
-                c1+=1
-    answer.append(c0)
-    answer.append(c1)
+                z+=1
+            else:
+                o+=1
+    
+    answer = run(arr,2,z,o)
     return answer
