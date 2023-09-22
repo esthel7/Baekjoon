@@ -1,10 +1,9 @@
 def solution(nums):
     answer = 0
-    N=len(nums)
+    total=len(nums)
     nums=list(set(nums))
-    afterN=len(nums)
-    if afterN>=N//2:
-        answer=N//2
+    if total//2<len(nums):
+        return total//2
     else:
-        answer=afterN
-    return answer
+        return len(nums)
+    # return answer
