@@ -1,46 +1,41 @@
-def solution(numbers):
+def check(num):
+    if num in values:
+        return False
+    values.append(num)
+    if num==1:
+        return False
+    if num==2:
+        return True
+    for i in range(2,num//2+1):
+        if num%i==0:
+            return False
+    return True
 
-    def check(a):
-        if a in nums:
-            return -1
-        nums.append(a)
-        if a==1 or a==0:
-            return -1
-        for i in range(2,a):
-            if a%i==0:
-                return -1
-        return 1
-    
-    def make(a,n,cnt):
-        global answer
-        if cnt!=n:
-            for i in range(n):
-                if i in l:
-                    continue
-                l.append(i)
-                if check(int(a+numbers[i]))==1:
-                    answers.append(1)
-                make(a+numbers[i],n,cnt+1)
-                l.pop(-1)
+def go(l,numbers):
+    if len(l)==0:
+        return
+    if numbers[l[0]]=='0':
+        return
+    num=''
+    for i in range(len(l)):
+        num+=numbers[l[i]]
+    num=int(num)
+    if check(num):
+        total[0]+=1
+
+def make(l,numbers):
+    go(l,numbers)
+    for i in range(len(numbers)):
+        if i not in l:
+            l.append(i)
+            make(l,numbers)
+            l.pop(-1)
             
-    answer = 0
-    numbers=list(numbers)
-    n=len(numbers)
+total=[0]
+values=[]
+def solution(numbers):
     l=[]
-    answers=[]
-    nums=[]
-    make('',n,0)
-    # for i in range(n):
-    #     a=numbers[i]
-    #     l.append(i)
-    #     if check(int(a))==1:
-    #         answer+=1
-    #     make('',n)
-    #     for j in range(n):
-    #         if j==i:
-    #             continue
-    #         a=a+numbers[j]
-    #         if check(int(a))==1:
-    #             answer+=1
-    answer=len(answers)
-    return answer
+    numbers=list(numbers)
+    make(l,numbers)
+    # return values
+    return total[0]    
