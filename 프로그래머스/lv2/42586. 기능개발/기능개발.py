@@ -1,29 +1,29 @@
+def check(last,n,progresses):
+    today=0
+    for i in range(last,n):
+        if progresses[i]>=100:
+            today+=1
+            last=i
+        else: # 미완료 존재
+            break
+    return [today,last]
+
 def solution(progresses, speeds):
-    # 개발순서 별개, 차례로 배포됨
     answer = []
     n=len(progresses)
-    l=[]
-    for i in range(n):
-        cnt=0
-        while True:
-            progresses[i]+=speeds[i]
-            cnt+=1
-            if progresses[i]>=100:
-                l.append(cnt)
-                break
-    i=0
-    while i!=n:
-        a=0
-        flag=0
-        for j in range(i,n):
-            if l[i]>=l[j]:
-                a+=1
-            else:
-                answer.append(a)
-                i=j
-                flag=1
-                break
-        if flag==0:
-            answer.append(a)
+    last=0
+    while True:
+        if last==n:
             break
+        today=0
+        flag=False
+        for i in range(last,n):
+            progresses[i]+=speeds[i]
+            if progresses[i]>=100:
+                flag=True
+        if flag:
+            value=check(last,n,progresses)
+            if value[0]!=0:
+                answer.append(value[0])
+                last=value[1]+1
     return answer
