@@ -1,20 +1,26 @@
+total=[0]
+
+def go(k,dungeons,l):
+    for i in range(len(l)):
+        if k>=dungeons[l[i]][0]:
+            k-=dungeons[l[i]][1]
+        else:
+            return -1
+    return len(l)
+
+def find(k,dungeons,l):
+    value=go(k,dungeons,l)
+    if value!=-1:
+        total[0]=max(total[0],value)
+    if len(l)==len(dungeons):
+        return
+    for i in range(len(dungeons)):
+        if i in l:
+            continue
+        l.append(i)
+        find(k,dungeons,l)
+        l.pop()
+
 def solution(k, dungeons):
-    def find(visited, now, cnt, n):
-        for i in range(n):
-            if visited[i]==0 and now>=dungeons[i][0]:
-                visited[i]=1
-                find(visited,now-dungeons[i][1],cnt+1,n)
-                visited[i]=0
-        tour.append(cnt)
-            
-        
-            
-    answer = -1
-    dungeons=sorted(dungeons, reverse=True)
-    n=len(dungeons)
-    visited=[0 for i in range(n)]
-    tour=[]
-    answer=find(visited,k,0,n)
-    if answer!=n:
-        answer=max(tour)
-    return answer
+    find(k,dungeons,[])
+    return total[0]
