@@ -1,14 +1,15 @@
-def solution(brown, yellow):
-    answer = []
-    # a*b=yellow, (a+2)*(b+2)-a*b=brown -> (a+2)*(b+2)=brown+yellow
+def find(brown,yellow):
     total=brown+yellow
-    for i in range(3,brown):
+    for i in range(3,total):
         if total%i==0:
-            wall=total//i
-            if (i-2)*(wall-2)==yellow:
-                if i>=wall:
-                    answer=[i,wall]
-                else:
-                    answer=[wall,i]
-                break
-    return answer
+            j=total//i
+            if (i-2)*(j-2)==yellow:
+                return [i,j]
+
+def solution(brown, yellow):
+    # yx*yy=yellow
+    # bx*by-yellow=brown
+    # bx=yx+2
+    # by=yy+2
+    value=find(brown, yellow)
+    return [value[1],value[0]]
