@@ -1,21 +1,22 @@
-cnt=0
+def go(l):
+    if len(l)==5:
+        return True
+
+def makeWord(l,wordList):
+    if go(l):
+        return
+    for i in range(len(wordList)):
+        l.append(wordList[i])
+        total.append(''.join(l))
+        makeWord(l,wordList)
+        l.pop()
+
+total=[]
 def solution(word):
-    def make(WORD,l):
-        global cnt
-        if WORD==l:
-            final.append(cnt)
-            return
-        if len(l)!=5:
-            for i in ['A','E','I','O','U']:
-                l.append(i)
-                cnt+=1
-                make(WORD,l)
-                l.pop(-1)
-    
     answer = 0
-    # global cnt=0
-    WORD=list(word)
-    final=[]
-    make(WORD,[])
-    answer=final[0]
+    wordList=['A','E','I','O','U']
+    makeWord([],wordList)
+    for i in range(len(total)):
+        if total[i]==word:
+            return i+1
     return answer
