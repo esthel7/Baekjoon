@@ -1,22 +1,16 @@
-import sys
-input=sys.stdin.readline
+a=list(input())
+b=list(input())
+L=len(b)
 
-# 문자는 문자열에서 사라지고, 남은 문자열은 합쳐짐
-
-l=input().rstrip()
-word=list(input().rstrip())
-Word=len(word)
-stack=[]
-for i in range(len(l)):
-    stack.append(l[i])
-    if stack[-Word:]==word: # 음수로 접근 시 뒤에서부터 계산
-        # stack=stack[:-Word]
-        for j in range(Word): # 시간 줄어?
-            stack.pop()
-        # print('after',stack)
-
-if len(stack):
-    print(''.join(stack)) # 연달아 출력하기
+s=[]
+for i in range(len(a)):
+  s.append(a[i])
+  if s[-1]==b[-1]:
+    sLen=len(s)
+    if s[sLen-L:sLen]==b:
+      for j in range(L):
+        s.pop()
+if len(s)==0:
+  print('FRULA')
 else:
-    print('FRULA')
-
+  print(''.join(s))
