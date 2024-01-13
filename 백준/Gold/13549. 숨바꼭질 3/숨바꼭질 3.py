@@ -1,32 +1,20 @@
-import sys
-input=sys.stdin.readline
+from collections import deque
 
-def find():
-    final=100000
-    q=[]
-    q.append([N,0])
-    while len(q)>0:
-        now,count=q.pop(0)
-        if final+2<=count:
-            break
-        if now==K:
-            if final>count:
-                final=count
-            continue
-        if now*2<=200000 and visited[now*2]>=count+1:
-            visited[now*2]=count+1
-            q.append([now*2,count])
-        if now-1>=0 and visited[now-1]>=count+1:
-            visited[now-1]=count+1
-            q.append([now-1,count+1])
-        if now+1<=100000 and visited[now+1]>=count+1:
-            visited[now+1]=count+1
-            q.append([now+1,count+1])
-    
-    print(final)
+def find(N,K):
+  q=deque([[N,0]])
+  while q:
+    [now,cnt]=q.popleft()
+    l[now]=True
+    if now==K:
+      return cnt
+    if 0<=now+1<200000 and not l[now+1]:
+      q.append([now+1,cnt+1])
+    if 0<=now-1<200000 and not l[now-1]:
+      q.append([now-1,cnt+1])
+    if 0<=now*2<200000 and not l[now*2]:
+      q.appendleft([now*2,cnt])
 
 N,K=map(int,input().split())
+l=[False for i in range(200000)]
 
-visited=[100000 for i in range(200001)]
-visited[N]=0
-find()
+print(find(N,K))
