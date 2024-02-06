@@ -1,82 +1,63 @@
 import sys
+from collections import deque
 input=sys.stdin.readline
 
-def get():
-    count=0
-    q=[]
-    made=[]
-    for i in range(N):
-        for j in range(M):
-            if l[i][j]=='o':
-                made.append([i,j])
-                count+=1
-                if count==2:
-                    made.append(0)
-                    q.append(made)
-                    return q
+def check(fx,fy,sx,sy,N,M):
+  if (fx==0 and sx!=0) or (fx!=0 and sx==0) or (fx==N-1 and sx!=N-1) or (fx!=N-1 and sx==N-1) or (fy==0 and sy!=0) or (fy!=0 and sy==0) or (fy==M-1 and sy!=M-1) or (fy!=M-1 and sy==M-1):
+    return True
+  return False
 
-def find():
-    global flag
-    while len(q)>0:
-        f,s,count=q.pop(0)
-        if count==10:
-            flag=1
-            print(-1)
-            return
-        if (f[0]==N-1 and s[0]!=N-1) or (s[0]==N-1 and f[0]!=N-1) or (f[0]==0 and s[0]!=0) or (s[0]==0 and f[0]!=0) or (f[1]==M-1 and s[1]!=M-1) or (s[1]==M-1 and f[1]!=M-1) or (f[1]==0 and s[1]!=0) or (s[1]==0 and f[1]!=0):
-            flag=1
-            print(count+1)
-            return
-        
-        # 상
-        if f[0]!=0 and s[0]!=0 and (l[f[0]-1][f[1]]!='#' or l[s[0]-1][s[1]]!='#'):
-            if l[f[0]-1][f[1]]=='#':
-                if f[0]!=s[0]-1 or f[1]!=s[1]:
-                    q.append([[f[0],f[1]],[s[0]-1,s[1]],count+1])
-            elif l[s[0]-1][s[1]]=='#':
-                if f[0]-1!=s[0] or f[1]!=s[1]:
-                    q.append([[f[0]-1,f[1]],[s[0],s[1]],count+1])
-            else:
-                q.append([[f[0]-1,f[1]],[s[0]-1,s[1]],count+1])
-        # 하
-        if f[0]!=N-1 and s[0]!=N-1 and (l[f[0]+1][f[1]]!='#' or l[s[0]+1][s[1]]!='#'):
-            if l[f[0]+1][f[1]]=='#':
-                if f[0]!=s[0]+1 or f[1]!=s[1]:
-                    q.append([[f[0],f[1]],[s[0]+1,s[1]],count+1])
-            elif l[s[0]+1][s[1]]=='#':
-                if f[0]+1!=s[0] or f[1]!=s[1]:
-                    q.append([[f[0]+1,f[1]],[s[0],s[1]],count+1])
-            else:
-                q.append([[f[0]+1,f[1]],[s[0]+1,s[1]],count+1])
-        # 좌
-        if f[1]!=0 and s[1]!=0 and (l[f[0]][f[1]-1]!='#' or l[s[0]][s[1]-1]!='#'):
-            if l[f[0]][f[1]-1]=='#':
-                if f[1]!=s[1]-1 or f[0]!=s[0]:
-                    q.append([[f[0],f[1]],[s[0],s[1]-1],count+1])
-            elif l[s[0]][s[1]-1]=='#':
-                if f[1]-1!=s[1] or f[0]!=s[0]:
-                    q.append([[f[0],f[1]-1],[s[0],s[1]],count+1])
-            else:
-                q.append([[f[0],f[1]-1],[s[0],s[1]-1],count+1])
-        # 우
-        if f[1]!=M-1 and s[1]!=M-1 and (l[f[0]][f[1]+1]!='#' or l[s[0]][s[1]+1]!='#'):
-            if l[f[0]][f[1]+1]=='#':
-                if f[1]!=s[1]+1 or f[0]!=s[0]:
-                    q.append([[f[0],f[1]],[s[0],s[1]+1],count+1])
-            elif l[s[0]][s[1]+1]=='#':
-                if f[1]+1!=s[1] or f[0]!=s[0]:
-                    q.append([[f[0],f[1]+1],[s[0],s[1]],count+1])
-            else:
-                q.append([[f[0],f[1]+1],[s[0],s[1]+1],count+1])
+def find(N,M):
+  q=deque([[coin[0][0],coin[0][1],coin[1][0],coin[1][1],1]])
+  if check(coin[0][0],coin[0][1],coin[1][0],coin[1][1],N,M):
+    print(1)
+    return
 
+  while q:
+    [fx,fy,sx,sy,cnt]=q.popleft()
+    for i in range(4):
+      nfx=fx+xbox[i]
+      nfy=fy+ybox[i]
+      nsx=sx+xbox[i]
+      nsy=sy+ybox[i]
+
+      if 0<=nfx<N and 0<=nfy<M and 0<=nsx<N and 0<=nsy<M:
+        if l[nfx][nfy]!='#':
+          if l[nsx][nsy]!='#':
+            if check(nfx,nfy,nsx,nsy,N,M):
+              print(cnt+1)
+              return
+            if cnt==9:
+              continue
+            q.append([nfx,nfy,nsx,nsy,cnt+1])
+          else:
+            if check(nfx,nfy,sx,sy,N,M):
+              print(cnt+1)
+              return
+            if cnt==9:
+              continue
+            q.append([nfx,nfy,sx,sy,cnt+1])
+        else:
+          if l[nsx][nsy]!='#':
+            if check(fx,fy,nsx,nsy,N,M):
+              print(cnt+1)
+              return
+            if cnt==9:
+              continue
+            q.append([fx,fy,nsx,nsy,cnt+1])
+
+  print(-1)
 
 N,M=map(int,input().split())
 l=[]
+coin=[]
 for i in range(N):
-    board=list(input().rstrip())
-    l.append(board)
-q=get()
-flag=0
-find()
-if flag==0:
-    print(-1)
+  a=list(input().rstrip())
+  for j in range(M):
+    if a[j]=='o':
+      coin.append([i,j])
+  l.append(a)
+
+xbox=[-1,1,0,0]
+ybox=[0,0,-1,1]
+find(N,M)
