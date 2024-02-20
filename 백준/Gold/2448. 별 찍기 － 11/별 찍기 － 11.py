@@ -1,39 +1,31 @@
+import sys
 from collections import deque
+input=sys.stdin.readline
 
-def star(n,total):
-  for i in range(0,n,3):
-    for j in range(total):
-      if l[i][j]=='*':
-        l[i][j]='*'
-        l[i+1][j-1]='*'
-        l[i+1][j+1]='*'
-        for k in range(5):
-          l[i+2][j-2+k]='*'
+def drawStar(x,y):
+  l[x][y]='*'
+  l[x+1][y-1]='*'
+  l[x+1][y+1]='*'
+  for i in range(5):
+    l[x+2][y-2+i]='*'
 
+N=int(input())
+l=[[' 'for i in range(5*(N//3)+(N//3)-1)]for j in range(N)]
 
-def make(n,x,y):
-  total=y*2
-  q=deque([[x,y]])
-  while q:
-    [x,y]=q.popleft()
-    l[x][y]='*'
+q=deque([[0,(5*(N//3)+(N//3)-1)//2]])
+while q:
+  [x,y]=q.pop()
+  drawStar(x,y)
+  nextX=x+3
+  if nextX>=N:
+    continue
+  nextY=y-3
+  if q and q[0][0]==nextX and q[0][1]==nextY:
+    q.popleft()
+  else:
+    q.appendleft([nextX,nextY])
+  nextY=y+3
+  q.appendleft([nextX,nextY])
 
-    if x+3!=n:
-      if q and q[-1][0]==x+3 and q[-1][1]==y-3:
-        q.pop()
-        q.append([x+3,y+3])
-        continue
-      q.append([x+3,y-3])
-      q.append([x+3,y+3])
-
-  star(n,total)
-
-n=int(input())
-m=n//3
-
-l=[[' ' for i in range(5*m+m-1)]for j in range(n)]
-
-half=(5*m+m-1)//2
-make(n,0,half)
-for i in range(n):
+for i in range(N):
   print(''.join(l[i]))
