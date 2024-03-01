@@ -1,21 +1,23 @@
 def solution(id_list, report, k):
-    n=len(id_list)
-    answer=[0 for i in range(n)]
-    names=[[]for i in range(n)] # 고발한 사람들
-    name={}
-    for i in range(n):
+    person=len(id_list)
+    num=len(report)
+
+    info={} # 신고한 사람들 저장
+    name={} # 해당 name idx 저장
+    for i in range(person):
+        info[id_list[i]]=[]
         name[id_list[i]]=i
+
+    for i in range(num):
+        do,sad=report[i].split(' ')
+        if do in info[sad]:
+            continue
+        info[sad].append(do)
+        
+    answer = [0 for i in range(person)]
+    for i in range(person):
+        if len(info[id_list[i]])>=k:
+            for item in info[id_list[i]]:
+                answer[name[item]]+=1
     
-    for i in range(len(report)):
-        [do,sad]=report[i].split(' ')
-        if do not in names[name[sad]]:
-            names[name[sad]].append(do)
-
-    for i in range(n):
-        nameLen=len(names[i])
-        if nameLen>=k:
-            for j in range(nameLen):
-                person=names[i][j]
-                answer[name[person]]+=1
-
     return answer
