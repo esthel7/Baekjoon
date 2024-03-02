@@ -1,40 +1,53 @@
 import sys
+import heapq
 input=sys.stdin.readline
 
-# 가중치합 최소
-
-def find():
-    count=0
-    while len(l):
-        C,A,B=l.pop()
-        if root[A]==0:
-            count+=C
-            if root[B]==0:
-                root[A]=A
-                root[B]=A
-            else:
-                root[A]=root[B]
-        else:
-            if root[A]!=root[B]:
-                count+=C
-                prev=root[B]
-                root[B]=root[A]
-                if prev!=0:
-                    for i in range(1,V+1):
-                        if root[i]==prev:
-                            root[i]=root[A]
-            else: # cycle
-                continue
-    print(count)
-
 V,E=map(int,input().split())
-l=[]
+
+edges=[]
 for i in range(E):
-    A,B,C=map(int,input().split())
-    if A<B:
-        l.append([C,A,B])
+  a,b,w=map(int,input().split())
+  if a<b:
+    edges.append([w,a,b])
+  elif a>b:
+    edges.append([w,b,a])
+
+answer=0
+root=[20000 for i in range(V+1)]
+info={} # save root info
+heapq.heapify(edges)
+
+while edges:
+  [w,a,b]=heapq.heappop(edges)
+  answer+=w
+  if root[a]==root[b]:
+    if root[a]!=20000:
+      answer-=w
+      continue
     else:
-        l.append([C,B,A])
-l=sorted(l,reverse=True)
-root=[0 for i in range(V+1)]
-find()
+      info[a]=[a,b]
+      root[a]=a
+      root[b]=a
+  else:
+    if root[a]<root[b]:
+      change=root[b]
+      save=root[a]
+      if root[b]==20000:
+        info[save].append(b)
+        root[b]=root[a]
+        change=-1
+    else:
+      change=root[a]
+      save=root[b]
+      if root[a]==20000:
+        info[save].append(a)
+        root[a]=root[b]
+        change=-1
+
+    if change!=-1:
+      for node in info[change]:
+        info[save].append(node)
+        root[node]=save
+      info[change]=[]
+
+print(answer)
