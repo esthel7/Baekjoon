@@ -1,33 +1,44 @@
-def find(node,info,child,parent,possible,sheep,wolf):
-    if info[node]==0:
-        sheep+=1
+from collections import deque
+
+def solution(info, edges):
+    many=len(info)
+    graph=[[]for i in range(many)] # 자식들 보관
+    for [a,b] in edges:
+        graph[a].append(b)
+        
+    answer=[0]
+    q=deque([0]) # 방문 가능 노드 관리
+    
+    def find(q,sheep,wolf):
+        while q:
+            node=q[0]
+            if info[node]==0: # sheep
+                q.popleft()
+                sheep+=1
+                for nextnode in graph[node]:
+                    if info[nextnode]==0:
+                        q.appendleft(nextnode)
+                    else:
+                        q.append(nextnode)
+            else: # wolf
+                if wolf+1<sheep:
+                    wolf+=1
+                    firstQ=deque(q)
+                    for i in range(len(firstQ)):
+                        q=list(firstQ)
+                        node=q.pop(i)
+                        q=deque(q)
+                        for nextnode in graph[node]:
+                            if info[nextnode]==0:
+                                q.appendleft(nextnode)
+                            else:
+                                q.append(nextnode)
+                        find(deque(q),sheep,wolf)
+                break
+                    
         if answer[0]<sheep:
             answer[0]=sheep
-    else:
-        if sheep<=wolf+1:
-            return
-        wolf+=1
     
-    for nextnode in child[node]:
-        possible.append(nextnode)
-    
-    for i in range(len(possible)):
-        new=list(possible)
-        nextnode=new.pop(i)
-        find(nextnode,info,child,parent,new,sheep,wolf)
-    
-        
-        
+    find(q,0,0)
 
-answer=[1]
-def solution(info, edges):
-    child=[[]for i in range(len(info))]
-    parent=[0 for i in range(len(info))]
-    
-    for i in range(len(edges)):
-        [p,c]=edges[i]
-        child[p].append(c)
-        parent[c]=p
-
-    find(0,info,child,parent,[],0,0)
     return answer[0]
