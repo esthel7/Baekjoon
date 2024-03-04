@@ -1,5 +1,4 @@
 import sys
-import heapq
 input=sys.stdin.readline
 
 n,m,r=map(int,input().split())
@@ -16,26 +15,23 @@ for _ in range(r):
 answer=0
 for i in range(1,n+1):
   visited=[-1 for i in range(n+1)]
+  cnt=item[i]
   q=[[0,i]]
-  heapq.heapify(q)
   visited[i]=0
 
   while q:
-    [now,idx]=heapq.heappop(q)
+    [now,idx]=q.pop()
     for [node,L] in graph[idx]:
-      if visited[node]==-1:
-        visited[node]=now+L
-      elif visited[node]>now+L:
-        visited[node]=now+L
-      else:
-        continue
+      if now+L<=m:
+        if visited[node]==-1:
+          visited[node]=now+L
+          cnt+=item[node]
+        elif visited[node]>now+L:
+          visited[node]=now+L
+        else:
+          continue
 
-      heapq.heappush(q,[now+L,node])
-
-  cnt=0
-  for j in range(1,n+1):
-    if visited[j]<=m and visited[j]!=-1:
-      cnt+=item[j]
+        q.append([now+L,node])
 
   if answer<cnt:
     answer=cnt
