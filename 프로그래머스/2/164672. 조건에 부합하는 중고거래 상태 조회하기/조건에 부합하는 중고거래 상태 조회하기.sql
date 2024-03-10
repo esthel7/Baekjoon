@@ -1,12 +1,13 @@
 -- 코드를 입력하세요
-SELECT BOARD_ID, WRITER_ID, TITLE, PRICE, (
+SELECT BOARD_ID,WRITER_ID,TITLE,PRICE,(
     CASE
-        WHEN STATUS='SALE'
-        THEN '판매중'
-        WHEN STATUS='RESERVED'
-        THEN '예약중'
-        ELSE '거래완료'
-    END
-)AS STATUS FROM USED_GOODS_BOARD
-WHERE DATE_FORMAT(CREATED_DATE,'%Y-%m-%d')='2022-10-05'
-ORDER BY BOARD_ID DESC
+    when STATUS='SALE'
+    then '판매중'
+    when STATUS='RESERVED'
+    then '예약중'
+    when STATUS='DONE'
+    then '거래완료'
+    end
+) as STATUS from USED_GOODS_BOARD B
+where DATE_FORMAT(CREATED_DATE,'%Y %M %D')='2022 October 5th'
+order by BOARD_ID desc
