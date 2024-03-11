@@ -1,50 +1,48 @@
-import sys
-sys.setrecursionlimit(10**6)
+# 가장 멀리 배달 후 수거 많이
 
-def count(cap,idx,l,num,Max):
-    nextIdx=-1
-    for i in range(idx,-1,-1):
-        if l[i]==0:
-            continue
-        if num+l[i]<cap:
-            num+=l[i]
-            if Max==-1:
-                Max=i+1
-            continue
-        elif num+l[i]>cap:
-            remain=cap-num
-            num=cap
-            l[i]-=remain
-            if Max==-1:
-                Max=i+1
-            nextIdx=i
-            break
-        else:
-            num=cap
-            if Max==-1:
-                Max=i+1
-            nextIdx=i-1
-            break
-    return [Max,l,nextIdx]
-
-def find(cap,n,d,p,D,P):
-    while D>=0 or P>=0:
-        dnum=0
-        dmax=-1
-        i=D
-        [dmax,d,D]=count(cap,i,d,dnum,dmax)
-
-        pnum=0
-        pmax=-1
-        i=P
-        [pmax,p,P]=count(cap,i,p,pnum,pmax)
-
-        # print(dmax,pmax,d,p,D,P)
-        if pmax!=-1 or dmax!=-1:
-            total[0]+=max(pmax,dmax)*2
-    
-
-total=[0]
 def solution(cap, n, deliveries, pickups):
-    find(cap,n,deliveries,pickups,n-1,n-1)
-    return total[0]
+    answer = 0
+    delfar=n-1
+    while delfar>=0:
+        if deliveries[delfar]==0:
+            delfar-=1
+        else:
+            break
+    pckfar=n-1
+    while pckfar>=0:
+        if pickups[pckfar]==0:
+            pckfar-=1
+        else:
+            break
+    last=max(delfar,pckfar)
+    prevdelfar=delfar
+    prevpckfar=pckfar
+
+    while last!=-1:
+        delcnt=0
+        delfar=-1
+        for i in range(prevdelfar,-1,-1):
+            if delcnt+deliveries[i]<=cap:
+                delcnt+=deliveries[i]
+                deliveries[i]=0
+            else:
+                deliveries[i]-=cap-delcnt
+                delcnt=cap
+                delfar=i
+                break
+        pckcnt=0
+        pckfar=-1
+        for i in range(prevpckfar,-1,-1):
+            if pckcnt+pickups[i]<=cap:
+                pckcnt+=pickups[i]
+                pickups[i]=0
+            else:
+                pickups[i]-=cap-pckcnt
+                pckcnt=cap
+                pckfar=i
+                break
+        answer+=(last+1)*2
+        last=max(delfar,pckfar)
+        prevdelfar=delfar
+        prevpckfar=pckfar
+    return answer
