@@ -1,35 +1,43 @@
-def make(l,idx,order,course):
-    if len(l)==course:
-        name=''.join(l)
-        if name in total:
-            total[name]+=1
-        else:
-            total[name]=1
-        if total[name]>cnt[course]:
-            cnt[course]=total[name]
-        return
-    
-    for i in range(idx,len(order)):
-        l.append(order[i])
-        make(l,i+1,order,course)
-        l.pop()
-    
-
-total={}
-cnt={}
 def solution(orders, course):
+    def find(total,Len,idx,start,now):
+        if Len<total:
+            return
+        if len(now)==total:
+            now=''.join(now)
+            if now in info:
+                info[now]+=1
+            else:
+                info[now]=1
+            return
+        for i in range(start,Len):
+            now.append(orders[idx][i])
+            find(total,Len,idx,i+1,list(now))
+            now.pop()
+        
     answer = []
-    for i in range(len(course)):
-        cnt[course[i]]=-1
-    for i in range(len(orders)):
-        order=sorted(list(orders[i]))
-        for j in range(len(course)):
-            if len(order)>=course[j]:
-                make([],0,order,course[j])
+    info={}
+    for total in course:
+        for i in range(len(orders)):
+            sortOrder=list(orders[i])
+            sortOrder.sort()
+            orders[i]=''.join(sortOrder)
+            find(total,len(orders[i]),i,0,[])
     
-    for key in total.keys():
-        L=len(key)
-        if total[key]>=2 and total[key]==cnt[L]:
-            answer.append(key)
+    courselist={}
+    for idx in course:
+        courselist[idx]=[0,[]]
+
+    for keys in info.keys():
+        if info[keys]>=2:
+            Len=len(keys)
+            if courselist[Len][0]<info[keys]:
+                courselist[Len][0]=info[keys]
+                courselist[Len][1]=[keys]
+            elif courselist[Len][0]==info[keys]:
+                courselist[Len][1].append(keys)
+
+    for idx in course:
+        answer+=courselist[idx][1]
     answer.sort()
+        
     return answer
