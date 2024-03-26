@@ -1,15 +1,21 @@
+import sys
 import heapq
+input=sys.stdin.readline
 
-heap = []
-n = int(input())
+N=int(input())
+l=[]
+heapq.heapify(l)
+for i in range(N):
+  now=list(map(int,input().split()))
+  now.sort(reverse=True)
+  for j in range(N):
+    if len(l)<N:
+      heapq.heappush(l,now[j])
+      continue
+    if l[0]<now[j]:
+      heapq.heappop(l)
+      heapq.heappush(l,now[j])
+    else:
+      break
 
-for _ in range(n):
-    numbers = map(int, input().split())
-    for number in numbers:
-        if len(heap) < n: # heap의 크기를 n개로 유지
-            heapq.heappush(heap, number)
-        else:
-            if heap[0] < number:
-                heapq.heappop(heap)
-                heapq.heappush(heap, number)
-print(heap[0])
+print(l[0])
