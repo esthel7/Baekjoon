@@ -9,26 +9,26 @@ bee=[[1 for i in range(M)]for j in range(M)]
 
 for _ in range(N):
   items=list(map(int,input().split()))
-  grow=[]
-  for idx in range(3):
-    for item in range(items[idx]):
-      grow.append(idx)
 
-  now=[[0 for i in range(M)]for j in range(M)]
+  value=2
   for i in range(M):
-    now[M-1-i][0]=grow[i]
-    bee[M-1-i][0]+=grow[i]
-  for i in range(M,len(grow)):
-    now[0][i+1-M]=grow[i]
-    bee[0][i+1-M]+=grow[i]
+    while items[-1]==0:
+      items.pop()
+      value-=1
+      continue
+    bee[0][M-1-i]+=value
+    items[-1]-=1
 
   for i in range(1,M):
-    for j in range(1,M):
-      value=max(now[i-1][j-1],now[i-1][j],now[i][j-1])
-      now[i][j]=value
-      bee[i][j]+=now[i][j]
+    while items[-1]==0:
+      items.pop()
+      value-=1
+      continue
+    bee[i][0]+=value
+    items[-1]-=1
 
 for i in range(M):
-  for j in range(M):
-    print(bee[i][j],end=' ')
+  print(bee[i][0],end=' ')
+  for j in range(1,M):
+    print(bee[0][j],end=' ')
   print()
