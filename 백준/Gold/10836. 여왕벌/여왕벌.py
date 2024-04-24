@@ -5,30 +5,20 @@ input=sys.stdin.readline
 # 왼쪽, 대각선위, 위쪽 속도 중 가장 큰 속도만큼 자람
 
 M,N=map(int,input().split())
-bee=[[1 for i in range(M)]for j in range(M)]
+side=[0 for i in range(2*M-1)]
 
 for _ in range(N):
   items=list(map(int,input().split()))
+  if items[0]<2*M-1:
+    side[items[0]]+=1
+  if items[0]+items[1]<2*M-1:
+    side[items[0]+items[1]]+=1
 
-  value=2
-  for i in range(M):
-    while items[-1]==0:
-      items.pop()
-      value-=1
-      continue
-    bee[0][M-1-i]+=value
-    items[-1]-=1
+for i in range(1,2*M-1):
+  side[i]+=side[i-1]
 
-  for i in range(1,M):
-    while items[-1]==0:
-      items.pop()
-      value-=1
-      continue
-    bee[i][0]+=value
-    items[-1]-=1
-
-for i in range(M):
-  print(bee[i][0],end=' ')
-  for j in range(1,M):
-    print(bee[0][j],end=' ')
+for i in range(M-1,-1,-1):
+  print(1+side[i],end=' ')
+  for j in range(M,2*M-1):
+    print(1+side[j],end=' ')
   print()
