@@ -1,20 +1,18 @@
-def find(N,M,start,num):
-  if len(num)==M:
-    for answer in num:
-      print(answer, end= ' ')
+import sys
+input=sys.stdin.readline
+
+def find(now,start):
+  if len(now)==M:
+    for i in range(M):
+      print(l[now[i]],end=' ')
     print()
     return
-
-  if start==N:
-    return
-
   for i in range(start,N):
-    num.append(l[i])
-    find(N,M,i+1,num)
-    num.pop()
-
+    now.append(i)
+    find(now,i+1)
+    now.pop()
 
 N,M=map(int,input().split())
 l=list(map(int,input().split()))
 l.sort()
-find(N,M,0,[])
+find([],0)
