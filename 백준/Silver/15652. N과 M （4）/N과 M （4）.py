@@ -1,25 +1,16 @@
 import sys
 input=sys.stdin.readline
 
-def find():
-    if len(s)==M:
-        for i in s:
-            print(i,end=' ')
-        print()
-        return
-
-    if len(s)==0:
-        for i in range(N):
-            s.append(i+1)
-            find()
-            s.pop()
-    else:
-        for i in range(s[-1]-1,N):
-            s.append(i+1)
-            find()
-            s.pop()
+def find(now,start):
+  if len(now)==M:
+    for i in range(M):
+      print(now[i],end=' ')
+    print()
+    return
+  for i in range(start,N+1):
+    now.append(i)
+    find(now,i)
+    now.pop()
 
 N,M=map(int,input().split())
-
-s=[]
-find()
+find([],1)
