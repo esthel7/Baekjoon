@@ -1,28 +1,22 @@
 import sys
 input=sys.stdin.readline
 
-def find(start,now,num,N,M):
+def find(now,start):
   if len(now)==M:
-    check=''
-    for item in now:
-      check+=str(item)+' '
-    if check in info:
-      return
-    info[check]=True
-    print(check)
+    answer=''
+    for i in range(M):
+      answer+=str(l[now[i]])+' '
+    if answer not in answers:
+      answers[answer]=True
+      print(answer)
     return
   for i in range(start,N):
-    if i in num:
-      continue
-    num.append(i)
-    now.append(l[i])
-    find(i+1,now,num,N,M)
-    num.pop()
+    now.append(i)
+    find(now,i+1)
     now.pop()
 
-info={}
 N,M=map(int,input().split())
 l=list(map(int,input().split()))
 l.sort()
-
-find(0,[],[],N,M)
+answers={}
+find([],0)
