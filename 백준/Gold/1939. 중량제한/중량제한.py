@@ -1,45 +1,45 @@
-from collections import deque
 import sys
-input = sys.stdin.readline
+import heapq
+input=sys.stdin.readline
 
-def bfs(weight): # weight == now
-	queue = deque()
-	queue.append(one)
-	visited = [False] * (n+1)
-	visited[one] = True
-	
-	while queue:
-		x= queue.popleft() # w == limit
-		
-		for i,w in bridges[x]:
-			if not visited[i] and w >= weight:
-				visited[i] = True
-				queue.append(i)
-	
-	if visited[two]: return True
-	else: return False
-	
-n, m = map(int,input().split())
-bridges = [[] for _ in range(n+1)]
+N,M=map(int,input().split())
 
-for i in range(m):
-	a,b,c = map(int,input().split())
-	bridges[a].append([b,c])
-	bridges[b].append([a,c])
-	
-one, two = map(int,input().split())
+graph={}
+for i in range(M):
+  A,B,C=map(int,input().split())
+  if A==B:
+    continue
+  if A not in graph:
+    graph[A]={}
+  if B not in graph:
+    graph[B]={}
 
-start = 1
-end = 1000000000
+  if B in graph[A] and graph[A][B]>C:
+    continue
+  graph[A][B]=C
+  graph[B][A]=C
 
-result = 0
-while start <= end:
-	mid = (start + end) //2
-	
-	if bfs(mid):
-		result = mid
-		start = mid + 1
-	else:
-		end = mid - 1
-		
-print(result)
+S,E=map(int,input().split())
+
+visit={}
+q=[]
+for node in graph[S]:
+  visit[node]=graph[S][node]
+  heapq.heappush(q,[-graph[S][node],node])
+
+while q:
+  cost,node=heapq.heappop(q)
+  cost*=(-1)
+  if node==E:
+    print(cost)
+    break
+
+  for nextNode in graph[node]:
+    if nextNode==S:
+      continue
+    nowCost=graph[node][nextNode]
+    Min=min(cost,nowCost)
+    if nextNode in visit and visit[nextNode]>=Min:
+      continue
+    visit[nextNode]=Min
+    heapq.heappush(q,[-Min,nextNode])
