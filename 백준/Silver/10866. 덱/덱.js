@@ -9,7 +9,6 @@ let input = [];
 rl.on('line', (line) => {
   input.push(line);
 }).on('close', () => {
-  cnt = 0;
   n = input.shift();
   save = [];
   answer = [];
@@ -17,7 +16,6 @@ rl.on('line', (line) => {
     now = input[i].split(' ');
     if (now.length === 2) {
       // push
-      cnt++;
       if (now[0] === 'push_back') save.push(now[1]);
       else save.unshift(now[1]);
     } else {
@@ -26,13 +24,11 @@ rl.on('line', (line) => {
         if (save.length === 0) answer.push(-1);
         else {
           answer.push(save.shift());
-          cnt--;
         }
       } else if (now === 'pop_back') {
         if (save.length === 0) answer.push(-1);
         else {
           answer.push(save.pop());
-          cnt--;
         }
       } else if (now === 'size') answer.push(save.length);
       else if (now === 'empty') {
@@ -43,7 +39,7 @@ rl.on('line', (line) => {
         else answer.push(save[0]);
       } else {
         if (save.length === 0) answer.push(-1);
-        else answer.push(save[cnt - 1]);
+        else answer.push(save[save.length-1]);
       }
     }
   }
