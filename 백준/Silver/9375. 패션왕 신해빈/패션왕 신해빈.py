@@ -1,17 +1,19 @@
-t = int(input())
+import sys
+input=sys.stdin.readline
 
-for i in range(t):
-    n = int(input())
-    weardict = {}
-    for j in range(n):
-        wear = list(input().split())
-        if wear[1] in weardict:
-            weardict[wear[1]].append(wear[0])
-        else:
-            weardict[wear[1]] = [wear[0]]
+T=int(input())
+for _ in range(T):
+  n=int(input())
+  info={}
+  for i in range(n):
+    name,group=input().rstrip().split()
+    if group in info:
+      info[group].append(name)
+    else:
+      info[group]=[name]
 
-    cnt = 1 # 각 종류마다 항목의 개수
-
-    for k in weardict:
-        cnt *= (len(weardict[k])+1)
-    print(cnt-1)
+  cnt=1
+  for group in info.keys():
+    cnt*=(len(info[group])+1)
+  cnt-=1
+  print(cnt)
