@@ -1,91 +1,100 @@
-from collections import deque
+import sys
+input=sys.stdin.readline
 
-n, m, t = map(int, input().split())
-graph = [list(map(int, input().split())) for _ in range(n)]
-# 동 - 서 - 남 - 북
-dx = [0, 0, 1, -1]
-dy = [1, -1, 0, 0]
-
-def rotate(x, d, k):
-    q = deque()
-    q.extend(graph[x])
-    if d == 0:
-        q.rotate(k)
-    else:
-        q.rotate(-k)
-    graph[x] = list(q)
-
-
-def change_avg():
-    avg_count = 0
-    all_sum = 0
-    for i in range(n):
-        for j in range(m):
-            if graph[i][j] != 0:
-                avg_count += 1
-                all_sum += graph[i][j]
-    if avg_count == 0:
-        return False
-    avg = all_sum / avg_count
-    for i in range(n):
-        for j in range(m):
-            if graph[i][j] != 0:
-                if graph[i][j] > avg:
-                    graph[i][j] -= 1
-                elif graph[i][j] < avg:
-                    graph[i][j] += 1
-    return True
-
-def solve(x, y):
-    q = deque()
-    q.append((x, y))
-    visited[x][y] = True
-    value = graph[x][y]
-    graph[x][y] = 0
-    count = 0
-    while q:
-        x, y = q.popleft()
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            if 0 > ny or ny >= m:
-                if y == 0:
-                    ny = m-1
-                elif y == m-1:
-                    ny = 0
-            if 0 <= nx < n and 0 <= ny < m:
-                if not visited[nx][ny]:
-                    if graph[nx][ny] == value:
-                        count += 1
-                        graph[nx][ny] = 0
-                        visited[nx][ny] = True
-                        q.append((nx, ny))
-    if count == 0:
-        graph[x][y] = value
-    return count
-
-
-for _ in range(t):
-    x, d, k = map(int, input().split())
-    check_sum = 0
-    for i in range(n):
-        check_sum += sum(graph[i])
-        if (i+1) % x == 0:
-            rotate(i, d, k)
-    if check_sum == 0:
+def sameCheck(x):
+  global change
+  for i in range(M):
+    value=l[x][i]
+    if value==0:
+      continue
+    changeFlag=False
+    for j in range(x-1,-1,-1):
+      if value==l[j][i]:
+        changeFlag=True
+      else:
         break
+    for j in range(x+1,N):
+      if value==l[j][i]:
+        changeFlag=True
+      else:
+        break
+    if changeFlag:
+      if x in change:
+        change[x][i]=True
+      else:
+        change[x]={i:True}
+
+  for i in range(1,M):
+    if l[x][i]==l[x][i-1] and l[x][i]!=0:
+      if x in change:
+        change[x][i]=True
+        change[x][i-1]=True
+      else:
+        change[x]={i:True,i-1:True}
+  if l[x][0]==l[x][M-1] and l[x][0]!=0:
+    if x in change:
+      change[x][0]=True
+      change[x][M-1]=True
     else:
-        visited = [[False] * m for _ in range(n)]
-        count = 0
-        for i in range(n):
-            for j in range(m):
-                if not visited[i][j] and graph[i][j] != 0:
-                    count += solve(i, j)
-        if count == 0:
-            change_avg()
+      change[x]={0:True,M-1:True}
 
-answer = 0
-for i in range(n):
-    answer += sum(graph[i])
 
-print(answer)
+def calculate():
+  global change
+  change={}
+  for i in range(N):
+    sameCheck(i)
+  
+  if len(change):
+    for x in change:
+      for y in change[x]:
+        l[x][y]=0
+  else:
+
+    total=0
+    cnt=0
+    for i in range(N):
+      for j in range(M):
+        if l[i][j]!=0:
+          cnt+=1
+          total+=l[i][j]
+    if cnt!=0:
+      ave=total/cnt
+      for i in range(N):
+        for j in range(M):
+          if l[i][j]==0:
+            continue
+          if l[i][j]>ave:
+            l[i][j]-=1
+          elif l[i][j]<ave:
+            l[i][j]+=1
+
+
+def clock(x,k):
+  global l
+  tmp=list(l[x])
+  left=tmp[:k]
+  right=tmp[k:]
+  l[x]=right+left
+
+
+N,M,T=map(int,input().split())
+l=[]
+for i in range(N):
+  l.append(list(map(int,input().split())))
+
+change={}
+for i in range(T):
+  x,d,k=map(int,input().split())
+  if d==0:
+    k=M-k
+  for j in range(x-1,N,x):
+    clock(j,k)
+  calculate()
+
+total=0
+for i in range(N):
+  for j in range(M):
+    total+=l[i][j]
+
+print(total)
