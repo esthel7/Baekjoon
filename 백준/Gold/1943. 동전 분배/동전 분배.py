@@ -23,10 +23,12 @@ for _ in range(3):
     continue
 
   success=False
-  info=[False for i in range(Half+1)]
+  info={}
   for i in range(N):
     now=l[i][0]
 
+    List=list(info.keys())
+    List.sort()
     for j in range(1,l[i][1]+1):
       value=now*j
       if value==Half:
@@ -35,13 +37,16 @@ for _ in range(3):
       elif value>Half:
         break
 
-      if info[Half-value]:
-        success=True
-        break
+      for key in List:
+        if key+value==Half:
+          success=True
+          break
+        if key+value>Half:
+          break
+        info[key+value]=True
 
-      for key in range(Half-value,-1,-1):
-        if info[key]:
-          info[key+value]=True
+      if success:
+        break
 
     if success:
       break
