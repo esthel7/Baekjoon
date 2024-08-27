@@ -4,32 +4,33 @@ input=sys.stdin.readline
 
 T=int(input())
 for _ in range(T):
+  def find(start):
+    q=[]
+    heapq.heappush(q,[0,start])
+    visited=[False for i in range(n+1)]
+    last=[]
+    cnt=0
+    while q:
+      time,num=heapq.heappop(q)
+      if visited[num]:
+        continue
+      visited[num]=True
+      cnt+=1
+      last=[cnt,time]
+      if num in graph:
+        for node in graph[num]:
+          if visited[node]:
+            continue
+          heapq.heappush(q,[time+graph[num][node],node])
+    print(last[0],last[1])
+
+
   n,d,c=map(int,input().split())
-  c-=1
-  l=[-1 for i in range(n)]
-  l[c]=0
-  info={}
+  graph={}
   for i in range(d):
     a,b,s=map(int,input().split())
-    a-=1
-    b-=1
-    if b in info:
-      info[b][a]=s
+    if b in graph:
+      graph[b][a]=s
     else:
-      info[b]={a:s}
-  q=[]
-  heapq.heappush(q,[0,c])
-  answer=[0,0]
-  while q:
-    time,item=heapq.heappop(q)
-    if l[item]!=time:
-      continue
-    answer[0]+=1
-    answer[1]=time
-    if item in info:
-      for nextItem in info[item]:
-        nextTime=info[item][nextItem]
-        if l[nextItem]==-1 or l[nextItem]>time+nextTime:
-          l[nextItem]=time+nextTime
-          heapq.heappush(q,[time+nextTime,nextItem])
-  print(answer[0],answer[1])
+      graph[b]={a:s}
+  find(c)
