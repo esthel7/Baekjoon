@@ -1,40 +1,29 @@
 import sys
-input=sys.stdin.readline
+sys.setrecursionlimit(10 ** 8)
+input = sys.stdin.readline
 
-M,N=map(int,input().split())
-l=[]
-for i in range(M):
-  l.append(list(map(int,input().split())))
+def dfs(sx, sy):
+    # 도착 지점에 도달하면 1(한 가지 경우의 수)를 리턴
+    if sx == m-1 and sy == n-1:
+        return 1
 
-xbox=[-1,1,0,0]
-ybox=[0,0,-1,1]
-visited=[[False for i in range(N)]for j in range(M)]
-cnt=[[0 for i in range(N)]for j in range(M)]
-cnt[0][0]=1
+    # 이미 방문한 적이 있다면 그 위치에서 출발하는 경우의 수를 리턴
+    if dp[sx][sy] != -1:
+        return dp[sx][sy]
+    
+    ways = 0
+    for i in range(4):
+        nx, ny = sx + dx[i], sy + dy[i]
+        if 0 <= nx < m and 0 <= ny < n and graph[sx][sy] > graph[nx][ny]:
+            ways += dfs(nx, ny)
+    
+    dp[sx][sy] = ways
+    return dp[sx][sy]
 
-def update(x,y,plus):
-  cnt[x][y]+=plus
-  for i in range(4):
-    newX=x+xbox[i]
-    newY=y+ybox[i]
-    if 0<=newX<M and 0<=newY<N and l[x][y]>l[newX][newY]:
-      if not visited[newX][newY]:
-        cnt[newX][newY]+=plus
-      else:
-        update(newX,newY,plus)
 
-for i in range(M):
-  for j in range(N):
-    visited[i][j]=True
-    if cnt[i][j]==0:
-      continue
-    for k in range(4):
-      newX=i+xbox[k]
-      newY=j+ybox[k]
-      if 0<=newX<M and 0<=newY<N and l[i][j]>l[newX][newY]:
-        if not visited[newX][newY]:
-          cnt[newX][newY]+=cnt[i][j]
-        else:
-          update(newX,newY,cnt[i][j])
+m, n = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(m)]
+dp = [[-1] * n for _ in range(m)]
+dx, dy = [1,-1,0,0], [0,0,1,-1]
 
-print(cnt[M-1][N-1])
+print(dfs(0,0))
