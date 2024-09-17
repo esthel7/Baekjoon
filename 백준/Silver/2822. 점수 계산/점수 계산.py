@@ -1,12 +1,20 @@
-score = []
+import sys
+input=sys.stdin.readline
+
+l=[]
 for i in range(8):
-    score.append(int(input()))
-temp = []
-answer = 0
+  now=int(input())
+  l.append([now,i+1])
+
+l.sort(reverse=True)
+total=0
+numbers=[]
 for i in range(5):
-    answer += max(score)
-    temp.append(score.index(max(score)) + 1)
-    score[score.index(max(score))] = -1
-temp.sort()
-print(answer)
-print(*temp)
+  total+=l[i][0]
+  numbers.append(l[i][1])
+
+numbers.sort()
+print(total)
+for answer in numbers:
+  print(answer,end=' ')
+print()
