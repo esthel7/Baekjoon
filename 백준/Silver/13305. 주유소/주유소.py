@@ -5,19 +5,15 @@ N=int(input())
 dis=list(map(int,input().split()))
 price=list(map(int,input().split()))
 
-dp=[-1 for i in range(N)]
-dp[0]=0
+answer=0
+target=price[0]
+start=0
+for i in range(1,N):
+  if price[i]<target:
+    answer+=sum(dis[start:i])*target
+    target=price[i]
+    start=i
 
-for i in range(N): 
-  distance=0
-  for j in range(i+1,N):
-    distance+=dis[j-1]
-    value=dp[i]+price[i]*distance
-    if dp[j]==-1:
-      dp[j]=value
-    elif dp[j]<=value:
-      break
-    else:
-      dp[j]=value
+answer+=sum(dis[start:N])*target
 
-print(dp[N-1])
+print(answer)
