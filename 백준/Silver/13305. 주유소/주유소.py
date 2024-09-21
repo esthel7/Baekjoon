@@ -15,7 +15,7 @@ for i in range(N):
     value=dp[i]+price[i]*distance
     if dp[j]==-1:
       dp[j]=value
-    elif dp[j]<value:
+    elif dp[j]<=value:
       break
     else:
       dp[j]=value
