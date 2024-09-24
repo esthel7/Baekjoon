@@ -1,27 +1,46 @@
-import math
+import sys
+input=sys.stdin.readline
 
-N = int(input())
+N=int(input())
+if N<4:
+  if N==2 or N==3:
+    print(1)
+  else:
+    print(0)
+  exit(0)
 
-a = [False, False] + [True] * (N-1)
-prime_num = []
+dp=[True for i in range(N+1)]
+dp[0]=False
+dp[1]=False
+possible=[]
+for i in range(2,N+1):
+  if dp[i]:
+    possible.append(i)
+    for j in range(2*i,N+1,i):
+      dp[j]=False
 
-for i in range(2, N+1):
-    if a[i]:
-        prime_num.append(i)
-        for j in range(2*i, N+1, i):
-            a[j] = False
-
-answer = 0
-start = 0
-end = 0
-while end <= len(prime_num):
-    temp_sum = sum(prime_num[start:end])
-    if temp_sum == N:
-        answer += 1
-        end += 1
-    elif temp_sum < N:
-        end += 1
+answer=0
+start=0
+end=1
+now=possible[0]
+Possible=len(possible)
+while start<Possible:
+  if now==N:
+    # print('check',possible[start],possible[end])
+    answer+=1
+    now-=possible[start]
+    start+=1
+  elif now<N:
+    if end+1<Possible:
+      now+=possible[end]
+      end+=1
     else:
-        start += 1
+      if possible[-1]==N:
+        answer+=1
+        # print('last')
+      break
+  else:
+    now-=possible[start]
+    start+=1
 
 print(answer)
