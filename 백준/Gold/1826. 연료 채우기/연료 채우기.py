@@ -1,29 +1,38 @@
+import sys
 import heapq
-n = int(input())
-station = []
-for _ in range(n+1):
-    location, gas = map(int, input().split())
-    station.append([location, gas])
+input=sys.stdin.readline
 
-station.sort()
-fuel = station[n][1] #처음에 가지고 있는 연료량
-current_location = 0 #초기 위치
-cnt = 0
+N=int(input())
+loc=[]
+for i in range(N):
+  a,b=map(int,input().split())
+  loc.append([a,b]) # 거리, 주유
+loc.sort()
 
-h = []  #힙을 이용해 최대값을 빠르게 찾아내기.
-for i in range(n+1):
-    distance = station[i][0] - current_location
-    current_location = station[i][0]
-    if fuel < distance: #연료가 부족할때. 빌려와야하는데, 지나간 주유소들중에서 가장 연료를 많이 채울수 있는 주유소를 선택.
-        while fuel < distance:
-            if len(h) > 0:
-                fuel += (-1*heapq.heappop(h))
-                cnt += 1
-            else:
-                cnt = -1
-                break
-        if cnt == -1:
-            break
-    fuel -= distance
-    heapq.heappush(h, -1 * station[i][1]) #일부러 -1을 곱해 최대값을 찾기 쉽게 해줬음.
-print(cnt)
+L,P=map(int,input().split())
+current=P
+cnt=0
+
+q=[]
+last=0
+while True:
+  if current>=L:
+    print(cnt)
+    break
+
+  for i in range(last,N):
+    if loc[i][0]<=current:
+      heapq.heappush(q,[-loc[i][1],loc[i][0]])
+      if i==N-1:
+        last=N
+    else:
+      last=i
+      break
+
+  if not q:
+    print(-1)
+    break
+
+  go,now=heapq.heappop(q)
+  current+=-go
+  cnt+=1
