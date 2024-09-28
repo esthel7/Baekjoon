@@ -1,27 +1,34 @@
-n = int(input())
+import sys
+input=sys.stdin.readline
 
-ans = 0
-row = [0] * n
+def find(idx):
+  global answer
+  if idx==N:
+    answer+=1
+    return
 
-def is_promising(x):
-    for i in range(x):
-        if row[x] == row[i] or abs(row[x] - row[i]) == abs(x - i):
-            return False
-    
-    return True
+  non={}
+  for i in range(idx):
+    diff=idx-i
+    non[dp[i]+diff]=True
+    non[dp[i]-diff]=True
 
-def n_queens(x):
-    global ans
-    if x == n:
-        ans += 1
-        return
+  for i in range(N):
+    if remain[i] and i not in non:
+      remain[i]=False
+      dp[idx]=i
+      find(idx+1)
+      remain[i]=True
 
-    else:
-        for i in range(n):
-            # [x, i]에 퀸을 놓겠다.
-            row[x] = i
-            if is_promising(x):
-                n_queens(x+1)
+N=int(input())
+dp=[-1 for i in range(N)]
+remain=[True for i in range(N)]
 
-n_queens(0)
-print(ans)
+answer=0
+for i in range(N):
+  dp[0]=i
+  remain[i]=False
+  find(1)
+  remain[i]=True
+
+print(answer)
