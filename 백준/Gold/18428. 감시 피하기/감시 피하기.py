@@ -1,58 +1,85 @@
-n = int(input())
-graph = []
-teacher = 0
-for _ in range(n):
-  data = list(input().strip().split(' '))
-  teacher += data.count('T')
-  graph.append(data)
+import sys
+input=sys.stdin.readline
 
-# 상,하,좌,우 움직이는 배열
-dx = [1,-1, 0, 0]
-dy = [0, 0, 1, -1]
-
-# 직선 방향 확인 함수
-def check_S(x,y):
-  for i in range(4):
-    nx = x + dx[i]
-    ny = y + dy[i]
-    # 직선 방향으로 확인
-    while 0<= nx < n and 0<= ny < n and graph[nx][ny] !='O':
-      if graph[nx][ny] == 'S':
-        # 감시가능하다
-        return True            
-      else:        
-        # T 나 X으면 계속 탐색
-        nx += dx[i]
-        ny += dy[i]
-  # 감시 불가능하다
-  return False
-
-def solution(count):
-  global answer
-  if count == 3:
-    cnt = 0
-    for i in range(n):
-      for j in range(n):
-        if graph[i][j] == 'T':
-          if not check_S(i,j):          
-            cnt+=1
-    # 모든 선생이 감시가 불가능할 때
-    if cnt == teacher:
-      answer = True
-    return
-
-  for i in range(n):
-    for j in range(n):
-      if graph[i][j] == 'X':
-        graph[i][j] = 'O'
-        count +=1
-        solution(count)
-        graph[i][j] = 'X'
-        count -=1
-
-answer = False
-solution(0)
-if answer:
+def check():
+  for tx, ty in teachers:
+    for i in range(4):
+      newX=tx+xbox[i]
+      newY=ty+ybox[i]
+      while True:
+        if 0<=newX<N and 0<=newY<N:
+          if l[newX][newY]=='S':
+            return False
+          elif l[newX][newY]=='X':
+            newX+=xbox[i]
+            newY+=ybox[i]
+          else: # T, O
+            break
+        else:
+          break
   print('YES')
-else:
-  print('NO')
+  exit(0)
+
+def find(x,y,cnt):
+  if cnt<=3:
+    check()
+    if cnt==3:
+      return
+  for i in range(x,N):
+    start=0
+    if i==x:
+      start=y
+    for j in range(start,N):
+      if possible[i][j]:
+        empty=[]
+        for key in possible[i][j].keys():
+          if key in left:
+            continue
+          left[key]=True
+          empty.append(key)
+        if empty:
+          l[i][j]='O'
+          find(i,j+1,cnt+1)
+          l[i][j]='X'
+          for emptyKey in empty:
+            left.pop(emptyKey)
+
+
+N=int(input())
+l=[]
+teachers=[]
+for i in range(N):
+  now=list(input().rstrip().split())
+  l.append(now)
+  for j in range(N):
+    if now[j]=='T':
+      teachers.append([i,j])
+
+xbox=[-1,1,0,0]
+ybox=[0,0,-1,1]
+
+possible=[[{} for i in range(N)]for j in range(N)]
+
+for idx in range(len(teachers)):
+  for i in range(4):
+    cnt=1
+    while True:
+      newX=teachers[idx][0]+xbox[i]*cnt
+      newY=teachers[idx][1]+ybox[i]*cnt
+      if 0<=newX<N and 0<=newY<N:
+        if l[newX][newY]=='T':
+          break
+        elif l[newX][newY]=='X':
+          cnt+=1
+        else:
+          for j in range(cnt-1,0,-1):
+            newX=teachers[idx][0]+xbox[i]*j
+            newY=teachers[idx][1]+ybox[i]*j
+            possible[newX][newY][idx*10+i+1]=True
+          break
+      else:
+        break
+
+left={}
+find(0,0,0)
+print('NO')
