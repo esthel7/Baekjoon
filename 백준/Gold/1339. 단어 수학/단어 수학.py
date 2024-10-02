@@ -1,43 +1,38 @@
 import sys
-import heapq
 input=sys.stdin.readline
 
-
 N=int(input())
-words=[]
 info={}
-
+change={}
+l=[]
 for _ in range(N):
   now=list(input().rstrip())
-  words.append(now)
+  l.append(now)
+  num=1
+  for i in range(len(now)-1,-1,-1):
+    if now[i] not in info:
+      change[now[i]]=0
+      info[now[i]]=0
+    info[now[i]]+=num
+    num*=10
 
-  Now=len(now)
-  for i in range(Now):
-    word=now[i]
-    value=10**(Now-i-1)
+s=[]
+for key in info.keys():
+  s.append([info[key],key])
+s.sort(reverse=True)
 
-    if word in info:
-      info[word]+=value
-    else:
-      info[word]=value
+num=9
+for total,key in s:
+  change[key]=num
+  num-=1
 
-q=[]
-for word in info.keys():
-  heapq.heappush(q,[-info[word],word])
-
-value=9
-final={}
-while q:
-  now,word=heapq.heappop(q)
-  final[word]=value
-  value-=1
-
-answer=[]
-for word in words:
+total=0
+for ll in l:
   now=0
-  for item in word:
-    now*=10
-    now+=final[item]
-  answer.append(now)
+  num=1
+  for i in range(len(ll)-1,-1,-1):
+    now+=change[ll[i]]*num
+    num*=10
+  total+=now
 
-print(sum(answer))
+print(total)
