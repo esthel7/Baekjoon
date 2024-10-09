@@ -1,23 +1,37 @@
 import sys
+import heapq
 input=sys.stdin.readline
 
 N=int(input())
 K=int(input())
 l=list(map(int,input().split()))
+l=list(set(l))
 l.sort()
+N=len(l)
 
-total=0
+if K>=N:
+  print(0)
+  exit(0)
+
+answer=2000000
 diff=[]
-for i in range(N-1):
-  diff.append([l[i+1]-l[i],i+1])
-  total+=l[i+1]-l[i]
-diff.sort()
+for i in range(1,N):
+  heapq.heappush(diff,[l[i-1]-l[i],i-1])
 
-for i in range(K-1):
-  if not diff:
-    print(0)
-    exit(0)
-  value,start=diff.pop()
-  total-=value
+cut=[]
+for _ in range(K-1):
+  value,idx=heapq.heappop(diff)
+  heapq.heappush(cut,idx)
 
-print(total)
+answer=0
+start=-1
+while cut:
+  item=heapq.heappop(cut)
+  answer+=l[item]-l[start+1]
+  start=item
+answer+=l[N-1]-l[start+1]
+print(answer)
+
+# 3 // 6, 7, 8 // 10, 12 // 14, 15 // 18, 20
+
+# 3 // 6, 7, 8 // 10 // 12, 14, 15 // 18, 20
