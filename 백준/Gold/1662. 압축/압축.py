@@ -1,23 +1,27 @@
-from sys import stdin
+import sys
+input=sys.stdin.readline
 
-input = stdin.readline
+def find(i,num):
+  while i<Len:
+    if i+1<Len and S[i+1]=='(':
+      tmp=int(S[i])
+      [plus,i]=find(i+2,0)
+      num+=tmp*plus
+    elif S[i]==')':
+      return [num,i]
+    else:
+      num+=1
+    i+=1
+  print(num)
 
-input_data = input().strip()
+S=list(input().rstrip())
+Len=len(S)
 
-def solv():
-    stack = []
+find(0,0)
 
-    cnt=0
-    before=''
-    for c in input_data:
-        if c == '(':
-            stack.append([cnt-1,before])
-            cnt = 0
-        elif c == ')':
-            info = stack.pop()
-            cnt = cnt*info[1]+info[0]
-        else:
-            cnt += 1
-            before = int(c)
-    print(cnt)
-solv()
+# 33(562(71(9)))
+# 33(562(79))
+# 33(567979)
+# 3567979567979567979
+
+# 3 / 3(562(71(9)))
