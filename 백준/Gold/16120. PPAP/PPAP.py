@@ -1,13 +1,20 @@
 import sys
-input = sys.stdin.readline
-ppap = []
-s = input().rstrip()
-ans = 'NP'
-for i in s:
-  ppap.append(i)
-  if len(ppap) >= 4 and ppap[-4:] == ['P','P','A','P']:
-    for _ in range(3):
-      ppap.pop()
-if len(ppap) == 1 and ppap[0] == 'P':
-  ans = 'PPAP'
-print(ans)
+input=sys.stdin.readline
+
+def check():
+  if s[-4]=='P' and s[-3]=='P' and s[-2]=='A' and s[-1]=='P':
+    s.pop()
+    s.pop()
+    s.pop()
+
+l=list(input().rstrip())
+s=[]
+for item in l:
+  s.append(item)
+  if len(s)>=4:
+    check()
+
+if len(s)==1 and s[0]=='P':
+  print('PPAP')
+else:
+  print('NP')
