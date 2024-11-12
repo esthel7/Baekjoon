@@ -1,99 +1,48 @@
 import sys
-from collections import deque
 input=sys.stdin.readline
 
+# 3.1 ~ 11.30
+def find(sm,sd,lm,ld,num,idx): # sm,sd,lm,ld는 한 송이만 있는 경우
+  for i in range(idx,N):
+    [nsm,nsd,nlm,nld]=l[i]
+    if nsm>lm or (nsm==lm and nsd>ld): # 1, idx
+      print(0)
+      exit()
+    if nlm<lm or (nlm==lm and nld<=ld): # idx, 1
+      continue
+
+    if nsm<sm or (nsm==sm and nsd<=sd): # idxS, 1, idxE
+      if nlm>11:
+        print(num)
+        exit()
+      find(sm,sd,nlm,nld,num,i+1)
+      return
+    elif nsm<lm or (nsm==lm and nsd<=ld): # 1S, idxS, 1E, idxE
+      if nlm>11:
+        print(num+1)
+        exit()
+      find(lm,ld,nlm,nld,num+1,i+1)
+      return
+    else: # 1E, idx
+      print(0)
+      exit()
+
+
+
 N=int(input())
-
-month=[0 for i in range(13)]
-month[1]=31
-month[2]=28
-month[3]=31
-month[4]=30
-month[5]=31
-month[6]=30
-month[7]=31
-month[8]=31
-month[9]=30
-month[10]=31
-month[11]=30
-month[12]=31
-
-midx=[0 for i in range(13)]
-for i in range(2,13):
-  midx[i]+=midx[i-1]+month[i-1]
-
 l=[]
 for i in range(N):
-  a,b,c,d=map(int,input().split())
-  if a>11 or c<3:
-    continue
-  l.append([a,b,c,d])
+  l.append(list(map(int,input().split())))
 l.sort()
 
-answer=0
-
-[a,b,c,d]=l[0]
-if midx[a]+b-1>midx[3]:
+if l[0][0]>3 or (l[0][0]==3 and l[0][1]>1):
   print(0)
-  exit(0)
-start=deque([midx[a]+b-1])
-end=deque([midx[c]+d-1])
+  exit()
 
-startidx=len(l)
-for i in range(1,len(l)):
-  [a,b,c,d]=l[i]
-  if a==3 and b==1:
-    if end[0]<midx[c]+d-1:
-      start=deque([midx[a]+b-1])
-      end=deque([midx[c]+d-1])
-    continue
-  if a>=3:
-    startidx=i
-    break
-  if end[0]<midx[c]+d-1:
-    start=deque([midx[a]+b-1])
-    end=deque([midx[c]+d-1])
-
-if end[0]>=midx[12]:
+if l[0][2]>11:
   print(1)
-  exit(0)
+  exit()
+find(3,1,l[0][2],l[0][3],1,1)
+print(0)
 
-if startidx==len(l):
-  print(0)
-  exit(0)
-
-for i in range(startidx,len(l)):
-  [a,b,c,d]=l[i]
-  s=midx[a]+b-1
-  e=midx[c]+d-1
-  while end:
-    if end[0]<s:
-      end.popleft()
-      start.popleft()
-      answer+=1
-    else:
-      break
-  if not end:
-    print(0)
-    exit(0)
-  if start[-1]==s:
-    start.pop()
-    end.pop()
-    start.append(s)
-    end.append(e)
-    continue
-  if end[-1]<e:
-    if len(end)>=2:
-      end.pop()
-      start.pop()
-    start.append(s)
-    end.append(e)
-    if e>=midx[12]:
-      break
-
-if end[-1]<midx[12]:
-  print(0)
-  exit(0)
-
-answer+=len(start)
-print(answer)
+# ~5.31 / 5.15~8.31 -> 5.31~8.31
