@@ -1,16 +1,17 @@
-n = int(input())
-lists = []
-dp = [1]*n
+import sys
+input=sys.stdin.readline
 
-for i in range(n):
-  a, b = map(int, input().split())
-  lists.append([a, b])
+N=int(input())
+l=[]
+for i in range(N):
+  l.append(list(map(int,input().split())))
+l.sort()
 
-lists.sort()
+dp=[0 for i in range(N)]
+for i in range(N):
+  now=l[i][1]
+  for j in range(i+1,N):
+    if now<l[j][1]:
+      dp[j]=max(dp[j],dp[i]+1)
 
-for i in range(1, n):
-  for j in range(0, i):
-    if lists[j][1] < lists[i][1]:
-      dp[i] = max(dp[i], dp[j]+1)
-      
-print(n-max(dp))
+print(N-max(dp)-1)
