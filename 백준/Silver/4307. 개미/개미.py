@@ -1,29 +1,17 @@
 import sys
+input=sys.stdin.readline
 
- 
+T=int(input())
+for _ in range(T):
+  stick,n=map(int,input().split())
 
-T = int(sys.stdin.readline())
-
-for i in range(T):
-
-    L, N = map(int, sys.stdin.readline().split())
-
-    ants_location = []
-
-    for i in range(N):
-
-        ants_location.append(int(sys.stdin.readline()))
-
-    ants_location.sort()
-
-    min_time = 0
-
-    max_time = 0
-
-    for ant in ants_location:
-
-        min_time = max(min_time, min(ant, L-ant))
-
-        max_time = max(max_time, ant, L-ant)
-
-    print(min_time, max_time)
+  fast=[]
+  l=[]
+  for i in range(n):
+    now=int(input())
+    fast.append(min(now,stick-now))
+    l.append(now)
+  fast=max(fast)
+  l.sort()
+  late=max(stick-l[0],l[-1])
+  print(fast,late)
