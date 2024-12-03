@@ -1,30 +1,32 @@
 import sys
-input = sys.stdin.readline
- 
+input=sys.stdin.readline
 
-n = int(input())
+def check(value):
+  for i in range(2,int(value**(0.5))+1):
+    if value%i==0:
+      return False
+  return True
 
-def checkPrimeNum(check_number):
-    #에라토스테네스의 체로 소수인지 확인
-    for i in range(2, int(check_number**0.5)+1): 
-        if int(check_number) % i == 0: 
-            return False
-    return True
+N=int(input())
 
-def dfs(num):
-	# 목표 길이 도달 시 멈춤
-    if len(str(num))==n:
-        print(num)
-    else:
-        for i in range(10):
-            temp = num * 10 + i
-            # 10곱하고 i 더해서 자릿수 늘린 수가 소수일때만 
-            # dfs로 다음 자릿수 확인 넘김
-            if checkPrimeNum(temp) == True:
-                dfs(temp)
-# 맨마지막으로 맨 앞자리를 봤을 떄 소수여야하므로 
-# 일의자리숫자중에 소수로 시작을 한다.
-dfs(2)
-dfs(3)
-dfs(5)
-dfs(7)
+num=[2,3,5,7]
+if N==1:
+  for item in num:
+    print(item)
+  exit()
+
+plus=[1,3,7,9]
+idx=1
+while idx<N:
+  idx+=1
+  newNum=[]
+  for item in num:
+    for p in plus:
+      value=item*10+p
+      if check(value):
+        newNum.append(value)
+  num=list(newNum)
+
+for item in num:
+  print(item)
+
