@@ -1,56 +1,94 @@
 import sys
-input = sys.stdin.readline
+input=sys.stdin.readline
 
-def get_dist(loc1, loc2):
-    x1, y1, x2, y2 = loc1[0], loc1[1], loc2[0], loc2[1]
-    return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+N,M=map(int,input().split())
 
+loc=[]
+for i in range(N):
+  x,y=map(int,input().split())
+  loc.append([x,y])
 
-def find(parent, x):
-    if x != parent[x]:
-        parent[x] = find(parent, parent[x])
-
-    return parent[x]
-
-
-def union(parent, a, b):
-    a = find(parent, a)
-    b = find(parent, b)
-
-    if a < b:
-        parent[b] = a
-    
+cnt=0
+root=[-1 for i in range(N)]
+for i in range(M):
+  x,y=map(int,input().split())
+  x-=1
+  y-=1
+  if root[x]==-1:
+    if root[y]==-1:
+      Min=min(x,y)
+      if Min==0:
+        cnt+=2
+      root[x]=Min
+      root[y]=Min
     else:
-        parent[a] = b
+      if root[y]==0:
+        cnt+=1
+      root[x]=root[y]
+  else:
+    if root[y]==-1:
+      if root[x]==0:
+        cnt+=1
+      root[y]=root[x]
+    elif root[x]!=root[y]:
+      Min=min(root[x],root[y])
+      Max=max(root[x],root[y])
+      if Min==0:
+        for j in range(N):
+          if root[j]==Max:
+            root[j]=Min
+            cnt+=1
+      else:
+        for j in range(N):
+          if root[j]==Max:
+            root[j]=Min
+
+q=[]
+for i in range(N):
+  for j in range(i+1,N):
+    value=((loc[i][0]-loc[j][0])**2+(loc[i][1]-loc[j][1])**2)**0.5
+    q.append([value,i,j])
+
+q.sort()
+
+answer=0
+for [value,a,b] in q:
+  if cnt==N:
+    break
+  if root[a]==-1:
+    answer+=value
+    if root[b]==-1:
+      Min=min(a,b)
+      if Min==0:
+        cnt+=2
+      root[a]=Min
+      root[b]=Min
+    else:
+      if root[b]==0:
+        cnt+=1
+      root[a]=root[b]
+  else:
+    if root[a]==root[b]:
+      continue
+    elif root[b]==-1:
+      answer+=value
+      if root[a]==0:
+        cnt+=1
+      root[b]=root[a]
+    else:
+      answer+=value
+      Min=min(root[a],root[b])
+      Max=max(root[a],root[b])
+      if Min==0:
+        for j in range(N):
+          if root[j]==Max:
+            root[j]=Min
+            cnt+=1
+      else:
+        for j in range(N):
+          if root[j]==Max:
+            root[j]=Min
 
 
-N, M = map(int, input().split())
-parent = list(range(N+1))
-
-edges = [0] * (N+1)
-for i in range(1, N+1):
-    edges[i] = list(map(int, input().split()))
-
-
-for _ in range(M):
-    a, b = map(int, input().split())
-    union(parent, a, b)
-
-
-possible = []
-for i in range(1, len(edges)-1):
-    for j in range(i+1, len(edges)):
-        possible.append([get_dist(edges[i], edges[j]), i, j])
-
-
-possible.sort()
-ans = 0
-
-for p in possible:
-    cost, x, y = p[0], p[1], p[2]
-
-    if find(parent, x) != find(parent, y):
-        union(parent, x, y)
-        ans += cost
-    
-print("{:.2f}".format(ans))
+# print('%.2lf'%answer)
+print(format(answer, ".2f"))
