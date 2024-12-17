@@ -1,15 +1,20 @@
-A, B = map(str, input().split(' '))
+import sys
+input=sys.stdin.readline
 
-ret = 0
+L,R=input().rstrip().split()
+L=list(L)
+R=list(R)
 
-if len(A) != len(B):
-    print(0)
+if len(L)!=len(R):
+  print(0)
+  exit()
 
-else: 
-    for i in range(len(A)):
-        if A[i] == B[i]:
-            if A[i] == '8':
-                ret += 1
-        else:
-            break
-    print(ret)
+answer=0
+for i in range(len(L)):
+  if L[i]!=R[i]:
+    print(answer)
+    exit()
+  if L[i]=='8':
+    answer+=1
+
+print(answer)
