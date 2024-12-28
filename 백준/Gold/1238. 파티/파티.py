@@ -3,43 +3,46 @@ import heapq
 input=sys.stdin.readline
 
 N,M,X=map(int,input().split())
-graph=[[]for i in range(N+1)]
-grp=[[]for i in range(N+1)]
+
+graph={}
+rgraph={}
+for i in range(1,N+1):
+  graph[i]={i:0}
+  rgraph[i]={i:0}
+
 for i in range(M):
-  a,b,c=map(int,input().split())
-  graph[b].append([c,a]) # cost, 출발 node
-  grp[a].append([c,b]) # cost, 도착 node
+  start,end,time=map(int,input().split())
+  graph[start][end]=time
+  rgraph[end][start]=time
 
-go=[0 for i in range(N+1)]
-go[X]=1
+go=[-1 for i in range(N+1)]
+go[X]=0
 q=[]
-heapq.heapify(q)
-for [c,nextnode] in graph[X]:
-  heapq.heappush(q,[c,nextnode])
+for key in rgraph[X].keys():
+  go[key]=rgraph[X][key]
+  heapq.heappush(q,[rgraph[X][key],key])
 while q:
-  cnt,node=heapq.heappop(q)
-  if go[node]==0 or go[node]>cnt:
-    go[node]=cnt
-    for [c,nextnode] in graph[node]:
-      heapq.heappush(q,[c+cnt,nextnode])
+  cost,node=heapq.heappop(q)
+  for key in rgraph[node].keys():
+    if go[key]==-1 or go[key]>cost+rgraph[node][key]:
+      go[key]=cost+rgraph[node][key]
+      heapq.heappush(q,[go[key],key])
 
-arrive=[0 for i in range(N+1)]
-arrive[X]=1
+arrive=[-1 for i in range(N+1)]
+arrive[X]=0
 q=[]
-heapq.heapify(q)
-for [c,nextnode] in grp[X]:
-  heapq.heappush(q,[c,nextnode])
+for key in graph[X].keys():
+  arrive[key]=graph[X][key]
+  heapq.heappush(q,[graph[X][key],key])
 while q:
-  cnt,node=heapq.heappop(q)
-  if arrive[node]==0 or arrive[node]>cnt:
-    arrive[node]=cnt
-    for [c,nextnode] in grp[node]:
-      heapq.heappush(q,[c+cnt,nextnode])
+  cost,node=heapq.heappop(q)
+  for key in graph[node].keys():
+    if arrive[key]==-1 or arrive[key]>cost+graph[node][key]:
+      arrive[key]=cost+graph[node][key]
+      heapq.heappush(q,[arrive[key],key])
 
-Max=go[1]+arrive[1]
-for i in range(2,N+1):
-  now=go[i]+arrive[i]
-  if now>Max:
-    Max=now
+answer=0
+for i in range(1,N+1):
+  answer=max(answer,go[i]+arrive[i])
 
-print(Max)
+print(answer)
