@@ -3,24 +3,45 @@ input=sys.stdin.readline
 
 N=int(input())
 l=list(map(int,input().split()))
-l=sorted(l)
+l.sort()
 
-diff=abs(l[0]+l[N-1]-l[1]-l[N-2])
+answer=-1
 
-for i in range(N-3):
-  for j in range(i+3,N):
-    fix=l[i]+l[j]
-    left=i+1
-    right=j-1
-    while left<right:
-      now=l[left]+l[right]
-      diff=min(diff,abs(now-fix))
-      if now-fix==0:
-        print(0)
-        exit(0)
-      elif now-fix>0:
-        right-=1
-      else:
-        left+=1
+def check(start,end):
+  if start>=end:
+    return
+  if start in info:
+    if end in info[start]:
+      return
+    info[start][end]=True
+    q.append([start,end])
+    return
+  else:
+    info[start]={end:True}
+    q.append([start,end])
+    return
 
-print(diff)
+info={0:{N-1:True}}
+q=[[0,N-1]]
+while q:
+  [start,end]=q.pop()
+  left=start+1
+  right=end-1
+  while left<right:
+    value=(l[start]+l[end])-(l[left]+l[right])
+    if value==0:
+      print(0)
+      exit()
+    elif value>0:
+      left+=1
+    else:
+      value*=-1
+      right-=1
+    if answer==-1 or answer>value:
+      answer=value
+  check(start+1,end)
+  check(start,end-1)
+
+print(answer)
+
+# 6, 10, 10, 28, 47, 60, 62, 62, 67, 70, 73, 100
