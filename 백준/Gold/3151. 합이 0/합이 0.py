@@ -1,19 +1,9 @@
 import sys
-from collections import deque
 input=sys.stdin.readline
 
 N=int(input())
 l=list(map(int,input().split()))
 l.sort()
-
-def notVisit(left,right):
-  if left not in visited:
-    visited[left]={right:True}
-    return True
-  if right not in visited[left]:
-    visited[left][right]=True
-    return True
-  return False
 
 answer=0
 for i in range(N-2):
