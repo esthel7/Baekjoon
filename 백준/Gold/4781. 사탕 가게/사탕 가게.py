@@ -3,23 +3,23 @@ input=sys.stdin.readline
 
 while True:
   n,m=map(float,input().split())
-  if n==0:
+  n=int(n)
+  m=int(m*100+0.5)
+  if n==0 and m==0:
     break
 
-  n=int(n)
-  m=int(m*100)
+  last=m+1
+  dp=[0 for i in range(last)]
 
-  answer=-1
-  money=[0 for i in range(m+1)]
   for i in range(n):
     c,p=map(float,input().split())
     c=int(c)
     p=int(p*100+0.5)
-    if p>m:
-      continue
-    for j in range(p,m+1):
-      money[j]=max(money[j],money[j-p]+c)
-      answer=max(answer,money[j])
 
-  print(answer)
+    for j in range(p,last):
+      if dp[j-p]+c>dp[j]:
+        dp[j]=dp[j-p]+c
+      if dp[j-1]>dp[j]:
+        dp[j]=dp[j-1]
 
+  print(dp[last-1])
