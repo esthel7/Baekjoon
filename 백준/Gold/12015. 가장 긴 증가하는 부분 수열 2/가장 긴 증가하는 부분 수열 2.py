@@ -1,32 +1,48 @@
 import sys
-input = sys.stdin.readline
+input=sys.stdin.readline
 
-N = int(input())
-A = [*map(int, input().split())]
+N=int(input())
+l=list(map(int,input().split()))
 
-LIS = [A[0]]
+rank=[]
+for item in l:
+  if not rank or rank[-1]<item:
+    rank.append(item)
+    continue
+  if rank[-1]==item:
+    continue
 
-def findPlace(e):
-    start = 0
-    end = len(LIS) - 1
-    
-    while start <= end:
-        mid = (start + end) // 2
-        
-        if LIS[mid] == e:
-            return mid
-        elif LIS[mid] < e:
-            start = mid + 1
-        else:
-            end = mid - 1
-            
-    return start
-
-for item in A:
-    if LIS[-1] < item:
-        LIS.append(item)
+  left=0
+  right=len(rank)-1
+  while left<=right:
+    mid=(left+right)//2
+    if mid==0:
+      if rank[mid]>=item:
+        rank[mid]=item
+      elif right>=1 and rank[mid+1]>=item:
+        rank[mid+1]=item
+      break
+    if rank[mid]==item:
+      break
+    elif rank[mid]<item:
+      if rank[mid+1]>=item:
+        rank[mid+1]=item
+        break
+      left=mid+1
     else:
-        idx = findPlace(item)
-        LIS[idx] = item
+      if rank[mid-1]<item:
+        rank[mid]=item
+        break
+      right=mid-1
 
-print(len(LIS))
+print(len(rank))
+
+"""
+6
+10 60 10 30 20 50
+1  2  1  2  2   3
+
+7
+1 10 20 2 3 4 5
+1 2  3  2 3 4 5
+"""
