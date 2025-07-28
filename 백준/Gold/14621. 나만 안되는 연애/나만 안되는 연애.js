@@ -4,51 +4,6 @@ const rl=readline.createInterface({
   output:process.stdout
 })
 
-function isSmall(a,b){
-  if (a[0]<b[0]) return true
-  return false
-}
-
-function heappush(q,item){
-  q.push(item)
-  let loc=q.length-1
-  while(loc>1){
-    const parent=Math.floor(loc/2)
-    if (isSmall(q[loc],q[parent])){
-      [q[loc],q[parent]]=[q[parent],q[loc]]
-      loc=parent
-    } else break
-  }
-}
-
-function heappop(q){
-  const value=q[1]
-  if (q.length===2){
-    q.pop()
-    return value
-  }
-  q.splice(1,1,q.pop())
-  let loc=1
-  const last=q.length
-  while(loc<last){
-    const left=loc*2
-    const right=left+1
-    if (left>=last) break
-    else if (right>=last){
-      if (isSmall(q[left],q[loc])){
-        [q[left],q[loc]]=[q[loc],q[left]]
-      }
-      break
-    }
-    const Min=isSmall(q[left],q[right])?left:right
-    if (isSmall(q[Min],q[loc])){
-      [q[Min],q[loc]]=[q[loc],q[Min]]
-      loc=Min
-    } else break
-  }
-  return value
-}
-
 const input=[]
 let iter=0
 rl.on('line',(line)=>{

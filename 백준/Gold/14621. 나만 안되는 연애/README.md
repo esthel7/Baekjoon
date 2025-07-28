@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 15180 KB, 시간: 208 ms
+메모리: 15160 KB, 시간: 200 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2025년 6월 10일 15:21:04
+2025년 7월 28일 20:47:11
 
 ### 문제 설명
 
@@ -28,7 +28,7 @@
 
 <p>만약 도로 데이터가 만약 왼쪽의 그림과 같다면, 오른쪽 그림의 보라색 선과 같이 경로를 구성하면 위의 3가지 조건을 만족하는 경로를 만들 수 있다.</p>
 
-<p style="text-align:center"><img alt="" src="" style="height:128px; width:345px"></p>
+<p style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/14621/1.png" style="height:128px; width:345px"></p>
 
 <p>이때, 주어지는 거리 데이터를 이용하여 사심 경로의 길이를 구해보자.</p>
 
