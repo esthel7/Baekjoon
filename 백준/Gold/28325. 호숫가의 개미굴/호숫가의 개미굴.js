@@ -19,6 +19,10 @@ rl.on('line',(line)=>{
       break
     }
   }
+  if (start===0 && C[0]===0) {
+    console.log(Math.floor(N/2))
+    process.exit()
+  }
   let last=-2
   let answer=0
   let first=false
