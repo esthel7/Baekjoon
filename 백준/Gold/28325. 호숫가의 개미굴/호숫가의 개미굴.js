@@ -10,8 +10,7 @@ rl.on('line',(line)=>{
   input.push(line)
 }).on('close',()=>{
   const N=Number(input[iter++])
-  let C=input[iter++].split(' ').map(item=>Number(item))
-  C=[...C,...C]
+  const C=input[iter++].split(' ').map(item=>Number(item))
   let start=0
   for(let i=0;i<N;i++){
     if (C[i]>0) {
@@ -27,7 +26,7 @@ rl.on('line',(line)=>{
   let answer=0
   let first=false
   for(let i=start;i<start+N-1;i++){
-    if (C[i]>0) answer+=C[i]
+    if (C[i%N]>0) answer+=C[i%N]
     else {
       if (i===start) first=true
       if (last+1!==i) {
@@ -36,7 +35,7 @@ rl.on('line',(line)=>{
       }
     }
   }
-  if (C[start+N-1]>0) answer+=C[start+N-1]
+  if (C[(start+N-1)%N]>0) answer+=C[(start+N-1)%N]
   else if (last!==start+N-2 && !first) answer+=1
   console.log(answer)
   process.exit()
